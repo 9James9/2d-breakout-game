@@ -20,32 +20,38 @@ let brickOffsetTop = 30
 let brickOffsetLeft = 30
 let bricks = []
 let brickColumnCount = 7
+let interval = setInterval(draw, 10)
 for (let c = 0; c < brickColumnCount; c++) {
     bricks[c] = []
     for (let r = 0; r < brickRowCount; r++) {
-        bricks[c][r] = {x: 0, Y: 0}
+        bricks[c][r] = {x: 0, Y: 0, status: 1}
     }
 }
 function drawBricks() {
     for (let c = 0; c < brickColumnCount; c++) {
         for (let r = 0; r < brickRowCount; r++) {
-            let brickX = (c*(brickWidth + brickPadding))+brickOffsetLeft
-            let brickY = (r*(brickHeight + brickPadding)) + brickOffsetTop
-            bricks[c][r].x = brickX
-            bricks[c][r].y = brickY
-            ctx.beginPath()
-            ctx.rect(brickX,brickY,brickWidth,brickHeight)
-            ctx.fillStyle = 'red'
-            ctx.fill()
-            ctx.closePath()
+            if(bricks[c][r].status == 1) {
+                let brickX = (c*(brickWidth + brickPadding))+brickOffsetLeft
+                let brickY = (r*(brickHeight + brickPadding)) + brickOffsetTop
+                bricks[c][r].x = brickX
+                bricks[c][r].y = brickY
+                ctx.beginPath()
+                ctx.rect(brickX,brickY,brickWidth,brickHeight)
+                ctx.fillStyle = 'red'
+                ctx.fill()
+                ctx.closePath()
+            }
+
         }
     }
 }
+
 function draw() {
     ctx.clearRect(0,0, canvas.width, canvas.height)
     drawBall()
     drawPaddle()
     drawBricks()
+    collisionDetection()
     x += dx;
     y += dy;
     if(y + dy < ballRadius) {
@@ -109,7 +115,19 @@ function keyUpHandler(e) {
         leftPressed = false
     }
 }
-let interval = setInterval(draw, 10)
+function collisionDetection(){
+    for(let c =0; c < brickColumnCount;c++) {
+        for (let r = 0; r < brickRowCount;r++) {
+            let b = bricks[c][r]
+            if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y+brickHeight) {
+                dy = -dy
+                b.status = 0
+                color = randomColor()
+            }
+        }
+    }
+}
+
 function random(num){
     return Math.floor(Math.random() * num)
 }
