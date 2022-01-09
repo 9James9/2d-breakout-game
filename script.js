@@ -63,9 +63,16 @@ function draw() {
         if (x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy
         } else {
+            lives--
+            if (!lives) {
+                alert('GAME OVER')
+                document.location.reload()
+                clearInterval(interval)
+            } else {
+                dy = -dy
+            }
             // alert("GAME OVER")
-            document.location.reload()
-            clearInterval(interval)
+
         }
 
     }
@@ -135,7 +142,6 @@ function collisionDetection(){
                 dy = -dy
                 b.status = 0
                 score += 1
-                console.log(score)
                 color = randomColor()
                 if (score == brickRowCount * brickColumnCount) {
                     alert('YOU WIN!')
