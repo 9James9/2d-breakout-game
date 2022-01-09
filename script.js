@@ -19,7 +19,6 @@ let brickOffsetTop = 10
 let brickOffsetLeft = 30
 let bricks = []
 let brickColumnCount = 4
-let interval = setInterval(draw, 10)
 let score = 0
 let lives = 3
 for (let c = 0; c < brickColumnCount; c++) {
@@ -67,12 +66,14 @@ function draw() {
             if (!lives) {
                 alert('GAME OVER')
                 document.location.reload()
-                clearInterval(interval)
+                // clearInterval(interval)
             } else {
-                dy = -dy
+                x = canvas.width/ 2
+                y = canvas.height - 30
+                dx = 2
+                dy = -2
+                paddleX = (canvas.width - paddleWidth) / 2
             }
-            // alert("GAME OVER")
-
         }
 
     }
@@ -91,6 +92,7 @@ function draw() {
             paddleX = 0
         }
     }
+    requestAnimationFrame(draw)
 }
 
 function drawBall() {
@@ -146,7 +148,7 @@ function collisionDetection(){
                 if (score == brickRowCount * brickColumnCount) {
                     alert('YOU WIN!')
                     document.location.reload()
-                    clearInterval(interval)
+                    // clearInterval(interval)
                 }
             }
         }
@@ -169,3 +171,4 @@ function randomColor() {
     return `rgb(${random(255)},${random(255)},${random(255)})`
 }
 
+draw()
