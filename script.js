@@ -21,6 +21,8 @@ let bricks = []
 let brickColumnCount = 4
 let score = 0
 let lives = 3
+const startBtn = document.querySelector('[data-start-button]')
+const startMenu = document.querySelector('[data-start-menu]')
 for (let c = 0; c < brickColumnCount; c++) {
     bricks[c] = []
     for (let r = 0; r < brickRowCount; r++) {
@@ -48,6 +50,7 @@ function drawBricks() {
 
 function draw() {
     ctx.clearRect(0,0, canvas.width, canvas.height)
+    hideStartingScreen()
     drawBall()
     drawPaddle()
     drawScore()
@@ -66,7 +69,6 @@ function draw() {
             if (!lives) {
                 alert('GAME OVER')
                 document.location.reload()
-                // clearInterval(interval)
             } else {
                 x = canvas.width/ 2
                 y = canvas.height - 30
@@ -113,6 +115,7 @@ function drawPaddle() {
 document.addEventListener('keydown', keyDownHandler, false)
 document.addEventListener('keyup', keyUpHandler, false)
 document.addEventListener('mousemove', mouseMoveHandler, false)
+startBtn.addEventListener('click', draw)
 function mouseMoveHandler(e){
     let relativeX = e.clientX - canvas.offsetLeft
     let relativeY = e.clientY - canvas.offsetTop
@@ -148,7 +151,6 @@ function collisionDetection(){
                 if (score == brickRowCount * brickColumnCount) {
                     alert('YOU WIN!')
                     document.location.reload()
-                    // clearInterval(interval)
                 }
             }
         }
@@ -170,5 +172,6 @@ function random(num){
 function randomColor() {
     return `rgb(${random(255)},${random(255)},${random(255)})`
 }
-
-draw()
+function hideStartingScreen() {
+    startMenu.classList.add('hidden')
+}
