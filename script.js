@@ -15,12 +15,13 @@ let brickRowCount = 2
 let brickWidth = 100
 let brickHeight = 20
 let brickPadding = 5
-let brickOffsetTop = 30
+let brickOffsetTop = 10
 let brickOffsetLeft = 30
 let bricks = []
 let brickColumnCount = 4
 let interval = setInterval(draw, 10)
 let score = 0
+let lives = 3
 for (let c = 0; c < brickColumnCount; c++) {
     bricks[c] = []
     for (let r = 0; r < brickRowCount; r++) {
@@ -50,9 +51,10 @@ function draw() {
     ctx.clearRect(0,0, canvas.width, canvas.height)
     drawBall()
     drawPaddle()
+    drawScore()
     drawBricks()
     collisionDetection()
-    drawScore()
+    drawLives()
     x += dx;
     y += dy;
     if(y + dy < ballRadius) {
@@ -101,6 +103,15 @@ function drawPaddle() {
 
 document.addEventListener('keydown', keyDownHandler, false)
 document.addEventListener('keyup', keyUpHandler, false)
+document.addEventListener('mousemove', mouseMoveHandler, false)
+function mouseMoveHandler(e){
+    let relativeX = e.clientX - canvas.offsetLeft
+    let relativeY = e.clientY - canvas.offsetTop
+    //only move paddle if mouse is inside canvas
+    if(relativeX > 0 && relativeX < canvas.width && relativeY < canvas.height && relativeY > 0) {
+        paddleX = relativeX - paddleWidth/2
+    }
+}
 function keyDownHandler(e) {
     if(e.key == 'right' || e.key == "ArrowRight") {
         rightPressed = true
@@ -127,7 +138,7 @@ function collisionDetection(){
                 console.log(score)
                 color = randomColor()
                 if (score == brickRowCount * brickColumnCount) {
-                    alert('you win')
+                    alert('YOU WIN!')
                     document.location.reload()
                     clearInterval(interval)
                 }
@@ -136,9 +147,14 @@ function collisionDetection(){
     }
 }
 function drawScore(){
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score:" +score,canvas.width - 100,canvas.height - 50);
+}
+function drawLives(){
     ctx.font = "16px Arial"
-    ctx.fillStyle = "#0095DD"
-    ctx.fillText = ("Score:" +score,8,20)
+    ctx.fillStyle = '#696969'
+    ctx.fillText(`Lives: ${lives}`, canvas.width - 100,canvas.height - 20)
 }
 function random(num){
     return Math.floor(Math.random() * num)
